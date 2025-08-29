@@ -17,6 +17,9 @@ import authRoutes from "./src/routes/authRoutes.js";
 import usuariosRoutes from "./src/routes/usuariosRoutes.js";
 import rolesRoutes from "./src/routes/rolesRoutes.js";
 import permisosRoutes from "./src/routes/permisosRoutes.js";
+import categoriasRoutes from "./src/routes/categoriasRoutes.js";
+import proveedoresRoutes from "./src/routes/proveedoresRoutes.js";
+import productosRoutes from "./src/routes/productosRoutes.js";
 
 // Importar middleware de manejo de errores
 import { errorHandler } from "./src/middlewares/errorHandler.js";
@@ -83,6 +86,20 @@ app.use("/api/roles", rolesRoutes);
  */
 app.use("/api/permisos", permisosRoutes);
 
+/**
+ * Routes de gestión de categorías
+ */
+app.use("/api/categorias", categoriasRoutes);
+
+/**
+ * Routes de gestión de proveedores
+ */
+app.use("/api/proveedores", proveedoresRoutes);
+
+/**
+ * Routes de gestión de productos
+ */
+app.use("/api/productos", productosRoutes);
 /**
  * Middleware para manejo de errores - debe ir al final
  */
