@@ -65,15 +65,6 @@ async function crearUsuariosIniciales() {
     console.log(`⚠️  Usuarios ya existentes: ${usuariosExistentes}`);
     console.log(`📋 Total procesados: ${usuarios.length}`);
 
-    // Mostrar información de acceso
-    console.log('\n🔑 Credenciales de acceso:');
-    console.log('👤 Administrador:');
-    console.log('   📧 Email: admin@carpinteria.com');
-    console.log('   🔑 Contraseña: admin123');
-    console.log('👤 Usuario normal:');
-    console.log('   📧 Email: usuario@carpinteria.com');
-    console.log('   🔑 Contraseña: usuario123');
-
     // Verificar usuarios creados
     const totalUsuarios = await ejecutarQuery('SELECT COUNT(*) as total FROM Usuarios');
     console.log(`\n📈 Total de usuarios en la base de datos: ${totalUsuarios[0].total}`);
