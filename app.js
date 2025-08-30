@@ -20,6 +20,7 @@ import permisosRoutes from "./src/routes/permisosRoutes.js";
 import categoriasRoutes from "./src/routes/categoriasRoutes.js";
 import proveedoresRoutes from "./src/routes/proveedoresRoutes.js";
 import productosRoutes from "./src/routes/productosRoutes.js";
+import { carritoRoutes } from "./src/routes/carritoRoutes.js";
 
 // Importar middleware de manejo de errores
 import { errorHandler } from "./src/middlewares/errorHandler.js";
@@ -100,6 +101,12 @@ app.use("/api/proveedores", proveedoresRoutes);
  * Routes de gestión de productos
  */
 app.use("/api/productos", productosRoutes);
+
+/**
+ * Routes de gestión del carrito de compras
+ */
+app.use("/api/carrito", carritoRoutes);
+
 /**
  * Middleware para manejo de errores - debe ir al final
  */
