@@ -119,6 +119,9 @@ app.use("/api/ventas", ventasRoutes);
  */
 app.use("/api/facturas", facturasRoutes);
 
+// Exponer la carpeta de imágenes como estática
+app.use('/uploads', express.static('public/uploads'));
+
 /**
  * Middleware para manejo de errores - debe ir al final
  */

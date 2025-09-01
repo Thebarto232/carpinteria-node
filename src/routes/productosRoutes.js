@@ -5,8 +5,10 @@
 
 import { Router } from 'express';
 import { ProductoController } from '../controllers/ProductoController.js';
+import { eliminarImagen, listarImagenes, subirImagen } from '../controllers/ProductoImagenController.js';
 import { verificarToken } from '../middlewares/auth/tokenMiddleware.js';
 import { requierePermiso } from '../middlewares/auth/authMiddleware.js';
+import upload from '../middlewares/uploadImagenProducto.js';
 
 const router = Router();
 
@@ -123,6 +125,45 @@ router.delete('/:id',
   verificarToken, 
   requierePermiso('eliminar_productos'), 
   ProductoController.eliminarProducto
+);
+
+/**
+ * @route   POST /api/productos/:id/imagenes
+ * @desc    Subir imagen para un producto
+ * @access  Requiere autenticación y permiso 'actualizar_productos'
+ * @params  {number} id - ID del producto
+ * @body    {file} imagen - Archivo de imagen (form-data)
+ */
+router.post('/:id/imagenes',
+  verificarToken,
+  requierePermiso('actualizar_productos'),
+  upload.single('imagen'),
+  subirImagen
+);
+
+/**
+ * @route   GET /api/productos/:id/imagenes
+ * @desc    Listar imágenes de un producto
+ * @access  Requiere autenticación y permiso 'leer_productos'
+ * @params  {number} id - ID del producto
+ */
+router.get('/:id/imagenes',
+  verificarToken,
+  requierePermiso('leer_productos'),
+  listarImagenes
+);
+
+/**
+ * @route   DELETE /api/productos/:id/imagenes/:idImagen
+ * @desc    Eliminar imagen de un producto
+ * @access  Requiere autenticación y permiso 'actualizar_productos'
+ * @params  {number} id - ID del producto
+ * @params  {number} idImagen - ID de la imagen
+ */
+router.delete('/:id/imagenes/:idImagen',
+  verificarToken,
+  requierePermiso('actualizar_productos'),
+  eliminarImagen
 );
 
 export default router;
