@@ -21,6 +21,8 @@ import categoriasRoutes from "./src/routes/categoriasRoutes.js";
 import proveedoresRoutes from "./src/routes/proveedoresRoutes.js";
 import productosRoutes from "./src/routes/productosRoutes.js";
 import { carritoRoutes } from "./src/routes/carritoRoutes.js";
+import ventasRoutes from "./src/routes/ventasRoutes.js";
+import facturasRoutes from "./src/routes/facturasRoutes.js";
 
 // Importar middleware de manejo de errores
 import { errorHandler } from "./src/middlewares/errorHandler.js";
@@ -106,6 +108,16 @@ app.use("/api/productos", productosRoutes);
  * Routes de gestión del carrito de compras
  */
 app.use("/api/carrito", carritoRoutes);
+
+/**
+ * Routes de gestión de ventas
+ */
+app.use("/api/ventas", ventasRoutes);
+
+/**
+ * Routes de gestión de facturas
+ */
+app.use("/api/facturas", facturasRoutes);
 
 /**
  * Middleware para manejo de errores - debe ir al final
