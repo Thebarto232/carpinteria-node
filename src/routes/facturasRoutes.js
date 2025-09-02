@@ -32,7 +32,7 @@ router.get('/mis-facturas', FacturaController.obtenerMisFacturas);
  * @desc Obtiene una factura por ID
  * @access Privado (propietario o admin)
  */
-router.get('/:id', FacturaController.obtenerFactura);
+router.get('/:id', requierePermiso('leer_facturas'), FacturaController.obtenerFactura);
 
 /**
  * @route GET /api/facturas/numero/:numero
@@ -46,7 +46,7 @@ router.get('/numero/:numero', FacturaController.buscarPorNumero);
  * @desc Descarga una factura en PDF
  * @access Privado (propietario o admin)
  */
-router.get('/:id/pdf', FacturaController.descargarFacturaPDF);
+router.get('/:id/pdf', requierePermiso('leer_facturas'), FacturaController.descargarFacturaPDF);
 
 // Rutas administrativas
 /**

@@ -384,10 +384,6 @@ export class FacturaPDFService {
                 <div class="total-label">Subtotal:</div>
                 <div class="total-value">$${factura.items ? factura.items.reduce((sum, item) => sum + parseFloat(item.subtotal), 0).toFixed(2) : '0.00'}</div>
             </div>
-            <div class="total-row">
-                <div class="total-label">IVA (19%):</div>
-                <div class="total-value">$${factura.items ? (factura.items.reduce((sum, item) => sum + parseFloat(item.subtotal), 0) * 0.19).toFixed(2) : '0.00'}</div>
-            </div>
             <div class="total-row total-final">
                 <div class="total-label">Total:</div>
                 <div class="total-value">$${parseFloat(factura.monto_total).toFixed(2)}</div>

@@ -18,11 +18,6 @@ export class FacturaController {
 
             const factura = await Factura.obtenerFacturaPorId(id);
 
-            // Verificar que la factura pertenece al usuario (excepto si es admin)
-            if (factura.id_usuario !== idUsuario && !req.usuario.permisos?.includes('leer_facturas')) {
-                return ResponseProvider.noAutorizado(res, 'No tienes permisos para ver esta factura');
-            }
-
             return ResponseProvider.success(res, { factura });
 
         } catch (error) {
@@ -221,11 +216,6 @@ export class FacturaController {
             
             if (!factura) {
                 return ResponseProvider.error(res, 'Factura no encontrada', 404);
-            }
-
-            // Verificar permisos (solo el propietario o admin pueden descargar)
-            if (factura.id_usuario !== idUsuario && req.usuario.nombre_rol !== 'Administrador') {
-                return ResponseProvider.error(res, 'No tienes permisos para acceder a esta factura', 403);
             }
 
             // Generar el PDF
