@@ -46,7 +46,7 @@ router.get('/numero/:numero', FacturaController.buscarPorNumero);
  * @desc Descarga una factura en PDF
  * @access Privado (propietario o admin)
  */
-router.get('/:id/pdf', requierePermiso('leer_facturas'), FacturaController.descargarFacturaPDF);
+router.get('/:id/pdf', FacturaController.descargarFacturaPDF);
 
 // Rutas administrativas
 /**
