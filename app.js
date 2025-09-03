@@ -23,6 +23,7 @@ import productosRoutes from "./src/routes/productosRoutes.js";
 import { carritoRoutes } from "./src/routes/carritoRoutes.js";
 import ventasRoutes from "./src/routes/ventasRoutes.js";
 import facturasRoutes from "./src/routes/facturasRoutes.js";
+import resenasRoutes from "./src/routes/resenasRoutes.js";
 
 // Importar middleware de manejo de errores
 import { errorHandler } from "./src/middlewares/errorHandler.js";
@@ -118,6 +119,11 @@ app.use("/api/ventas", ventasRoutes);
  * Routes de gestión de facturas
  */
 app.use("/api/facturas", facturasRoutes);
+
+/**
+ * Routes de reseñas de productos
+ */
+app.use("/api", resenasRoutes);
 
 // Exponer la carpeta de imágenes como estática
 app.use('/uploads', express.static('public/uploads'));
