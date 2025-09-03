@@ -54,13 +54,17 @@ export class Venta {
             }
 
             // 4. Calcular total de la venta
-            const totalVenta = productosCarrito.reduce((total, producto) => total + producto.subtotal, 0);
+            console.log(productosCarrito);
+            const totalVenta = productosCarrito.reduce((total, producto) => total + Number(producto.subtotal), 0);
+
+            // pasar total vetna a string
+
 
             // 5. Crear la venta
             const [resultadoVenta] = await connection.execute(`
                 INSERT INTO Ventas (id_usuario, total_venta, estado_venta)
                 VALUES (?, ?, 'COMPLETADA')
-            `, [idUsuario, totalVenta]);
+            `, [idUsuario, Number(totalVenta)]);
 
             const idVenta = resultadoVenta.insertId;
 
