@@ -7,6 +7,31 @@ import { ejecutarQuery } from "../utils/db.js";
 import bcrypt from "bcryptjs";
 
 export class Usuario {
+  /**
+   * Crea una dirección para un usuario
+   * @param {Object} datosDireccion
+   * @returns {Promise<number>} id_direccion
+   */
+  static async crearDireccion({ id_usuario, direccion, ciudad, departamento, codigo_postal, pais }) {
+    try {
+      const query = `
+        INSERT INTO Direcciones (id_usuario, direccion, ciudad, departamento, codigo_postal, pais)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `;
+      const resultado = await ejecutarQuery(query, [
+        id_usuario,
+        direccion,
+        ciudad,
+        departamento,
+        codigo_postal,
+        pais
+      ]);
+      return resultado.insertId;
+    } catch (error) {
+      console.error('Error al crear dirección:', error);
+      throw error;
+    }
+  }
   
   /**
    * Busca un usuario por su email
@@ -59,12 +84,17 @@ export class Usuario {
           u.fecha_registro,
           u.ultimo_acceso,
           r.nombre_rol,
-          r.descripcion as descripcion_rol
+          r.descripcion as descripcion_rol,
+          d.direccion,
+          d.ciudad,
+          d.departamento,
+          d.codigo_postal,
+          d.pais
         FROM Usuarios u
         INNER JOIN Roles r ON u.id_rol = r.id_rol
-        WHERE u.id_usuario = ? AND u.estado != 'INACTIVO'
+        LEFT JOIN Direcciones d ON u.id_usuario = d.id_usuario
+        WHERE u.id_usuario = ?
       `;
-      
       const filas = await ejecutarQuery(query, [id]);
       return filas[0] || null;
     } catch (error) {
@@ -128,7 +158,7 @@ export class Usuario {
       const query = `
         UPDATE Usuarios 
         SET nombre_usuario = ?, telefono = ?, id_rol = ?
-        WHERE id_usuario = ? AND estado != 'INACTIVO'
+        WHERE id_usuario = ?
       `;
       
       const resultado = await ejecutarQuery(query, [nombre_usuario, telefono, id_rol, id]);
@@ -196,31 +226,37 @@ export class Usuario {
     try {
       const offset = (pagina - 1) * limite;
       
-      let whereClause = "WHERE u.estado != 'INACTIVO'";
+      let whereClause = "";
       const parametros = [];
       
       if (busqueda) {
-        whereClause += " AND (u.nombre_usuario LIKE ? OR u.correo LIKE ?)";
+        whereClause = "WHERE (u.nombre_usuario LIKE ? OR u.correo LIKE ?)";
         parametros.push(`%${busqueda}%`, `%${busqueda}%`);
       }
       
       // Consulta para obtener usuarios
-      const query = `
-        SELECT 
-          u.id_usuario,
-          u.nombre_usuario,
-          u.correo,
-          u.telefono,
-          u.estado,
-          u.fecha_registro,
-          u.ultimo_acceso,
-          r.nombre_rol
-        FROM Usuarios u
-        INNER JOIN Roles r ON u.id_rol = r.id_rol
-        ${whereClause}
-        ORDER BY u.fecha_registro DESC
-        LIMIT ${limite} OFFSET ${offset}
-      `;
+        const query = `
+          SELECT 
+            u.id_usuario,
+            u.nombre_usuario,
+            u.correo,
+            u.telefono,
+            u.estado,
+            u.fecha_registro,
+            u.ultimo_acceso,
+            r.nombre_rol,
+            d.direccion,
+            d.ciudad,
+            d.departamento,
+            d.codigo_postal,
+            d.pais
+          FROM Usuarios u
+          INNER JOIN Roles r ON u.id_rol = r.id_rol
+          LEFT JOIN Direcciones d ON u.id_usuario = d.id_usuario
+          ${whereClause}
+          ORDER BY u.fecha_registro DESC
+          LIMIT ${limite} OFFSET ${offset}
+        `;
       
       const usuarios = await ejecutarQuery(query);
       

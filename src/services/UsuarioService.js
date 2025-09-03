@@ -5,6 +5,7 @@
 
 import { Usuario } from "../models/Usuario.js";
 import { Rol } from "../models/Rol.js";
+import Direccion from "../models/Direccion.js";
 
 export class UsuarioService {
   
@@ -33,7 +34,12 @@ export class UsuarioService {
         estado: usuario.estado,
         rol: usuario.nombre_rol,
         fecha_registro: usuario.fecha_registro,
-        ultimo_acceso: usuario.ultimo_acceso
+        ultimo_acceso: usuario.ultimo_acceso,
+        direccion: usuario.direccion,
+        ciudad: usuario.ciudad,
+        departamento: usuario.departamento,
+        codigo_postal: usuario.codigo_postal,
+        pais: usuario.pais
       }));
 
       return {
@@ -68,6 +74,11 @@ export class UsuarioService {
         estado: usuario.estado,
         fecha_registro: usuario.fecha_registro,
         ultimo_acceso: usuario.ultimo_acceso,
+        direccion: usuario.direccion,
+        ciudad: usuario.ciudad,
+        departamento: usuario.departamento,
+        codigo_postal: usuario.codigo_postal,
+        pais: usuario.pais,
         rol: {
           id_rol: usuario.id_rol,
           nombre_rol: usuario.nombre_rol,
@@ -92,7 +103,7 @@ export class UsuarioService {
    */
   static async crearUsuario(datosUsuario) {
     try {
-      const { nombre_usuario, correo, contraseña, telefono, id_rol } = datosUsuario;
+  const { nombre_usuario, correo, contraseña, telefono, id_rol, direccion, ciudad, departamento, codigo_postal, pais } = datosUsuario;
 
       // Validaciones
       if (!nombre_usuario || nombre_usuario.trim().length < 2) {
@@ -124,6 +135,18 @@ export class UsuarioService {
         id_rol: id_rol || 2 // Por defecto rol de usuario
       });
 
+      // Si hay dirección, crearla
+      if (direccion && ciudad && departamento && pais) {
+        await Usuario.crearDireccion({
+          id_usuario: idUsuario,
+          direccion: direccion.trim(),
+          ciudad: ciudad.trim(),
+          departamento: departamento.trim(),
+          codigo_postal: codigo_postal ? codigo_postal.trim() : null,
+          pais: pais.trim()
+        });
+      }
+
       // Obtener datos del usuario creado
       return await this.obtenerUsuarioPorId(idUsuario);
     } catch (error) {
@@ -140,7 +163,7 @@ export class UsuarioService {
    */
   static async actualizarUsuario(idUsuario, datosActualizar) {
     try {
-      const { nombre_usuario, telefono, id_rol } = datosActualizar;
+  const { nombre_usuario, telefono, id_rol, direccion, ciudad, departamento, codigo_postal, pais } = datosActualizar;
 
       // Verificar que el usuario existe
       const usuarioExistente = await Usuario.buscarPorId(idUsuario);
@@ -172,6 +195,17 @@ export class UsuarioService {
       
       if (!actualizado) {
         throw new Error('No se pudo actualizar el usuario');
+      }
+
+      // Actualizar o crear dirección si se envía algún dato de dirección
+      if (direccion || ciudad || departamento || codigo_postal || pais) {
+        await Direccion.actualizarDireccion(idUsuario, {
+          direccion,
+          ciudad,
+          departamento,
+          codigo_postal,
+          pais
+        });
       }
 
       // Retornar usuario actualizado

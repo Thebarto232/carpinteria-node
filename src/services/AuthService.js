@@ -75,7 +75,7 @@ export class AuthService {
    */
   static async registrar(datosUsuario) {
     try {
-      const { nombre_usuario, correo, contraseña, telefono, id_rol = 2 } = datosUsuario;
+  const { nombre_usuario, correo, contraseña, telefono, id_rol = 2, direccion, ciudad, departamento, codigo_postal, pais } = datosUsuario;
 
       // Validaciones básicas
       if (!nombre_usuario || !correo || !contraseña) {
@@ -101,6 +101,19 @@ export class AuthService {
         id_rol
       });
 
+      // Crear dirección si se proporcionan los datos
+      let idDireccion = null;
+      if (direccion && ciudad && departamento && pais) {
+        idDireccion = await Usuario.crearDireccion({
+          id_usuario: idUsuario,
+          direccion,
+          ciudad,
+          departamento,
+          codigo_postal,
+          pais
+        });
+      }
+
       // Obtener datos del usuario creado
       const usuarioCreado = await Usuario.buscarPorId(idUsuario);
       
@@ -116,7 +129,8 @@ export class AuthService {
           descripcion: usuarioCreado.descripcion_rol
         },
         estado: usuarioCreado.estado,
-        fecha_registro: usuarioCreado.fecha_registro
+        fecha_registro: usuarioCreado.fecha_registro,
+        direccion: idDireccion
       };
     } catch (error) {
       console.error('Error en registro:', error);
